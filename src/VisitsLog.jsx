@@ -55,7 +55,7 @@ const VisitsLog = ({ visits, onViewDetails, onDelete, user, isLoading, handleSyn
     <div className="page-content">
         <FollowUps userId={user?.uid}/>
         {isOnline && queue.length > 0 && (
-          <div className="sync-container card">
+          <div className="sync-container card" style={{marginTop:"20px"}}>
             <h3>{queue.length} visit(s) saved locally.</h3>
             <p>Connect to the internet and sync to save them to the cloud.</p>
             <button onClick={handleSync} className="btn btn-confirm">

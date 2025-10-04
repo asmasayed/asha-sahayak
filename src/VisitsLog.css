@@ -25,7 +25,6 @@
 }
 
 .visit-card-body {
-  margin: 1rem 0;
   flex-grow: 1; /* Pushes the footer to the bottom */
 }
 
