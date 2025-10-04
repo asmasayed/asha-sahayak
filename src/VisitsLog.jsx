@@ -74,7 +74,7 @@ const VisitsLog = ({ visits, onViewDetails, onDelete, user, isLoading, handleSyn
             />
         </div>
         
-        <h2>Past Visits</h2>
+        <h2 style={{marginBottom:"10px"}}>Past Visits</h2>
 
         <div className="visits-list">
             {isLoading ? (
