@@ -672,7 +672,7 @@ return sortedMatches
       <header className="app-header">
         {/* --- Left side with Logo and Title --- */}
         <div className="header-left">
-          <img src="/logo.jpg" alt="ASHA Voice Assistant Logo" className="header-logo" />
+          <img src="/logo.png" alt="ASHA Voice Assistant Logo" className="header-logo" style={{borderRadius:"50%"}} />
           <div className="header-title-group">
             <h1 className="app-name">ASHA Voice Assistant</h1>
             <p className="welcome-message">

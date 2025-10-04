@@ -658,6 +658,8 @@ input::placeholder, textarea::placeholder {
   .header-logo {
     width: 32px;
     height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
   }
   .app-name {
     font-size: var(--font-size-sm);
