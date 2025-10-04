@@ -1,6 +1,7 @@
 import { useState} from  'react';
 import './App.css'
 import './HomePage.css';
+import DownloadSummary from './DownloadSummary';
 
 // A reusable component for displaying and editing a single field.
 // It's kept here because it is only used by the HomePage.
@@ -47,7 +48,8 @@ const HomePage = ({
   showToast,
   isOnline,
   activeTab,
-  handleTabToggle 
+  handleTabToggle ,
+  visits
 }) => {
   const InfoTab = ({ title, content, isActive, onClick }) => (
   <div className={`info-tab ${isActive ? 'active' : ''}`} onClick={onClick}>
@@ -305,6 +307,8 @@ const HomePage = ({
               />
             </div>
           </div>
+
+            <DownloadSummary visits={visits} showToast={showToast} />
         </>
       )}
     </>

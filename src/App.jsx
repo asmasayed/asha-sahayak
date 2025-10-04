@@ -17,6 +17,7 @@ import VisitDetailModal from './VisitDetailModal';
 import ProfileDropdown from './ProfileDropdown';
 import './ProfileDropdown.css'
 import './HomePage.css'
+import DownloadSummary from './DownloadSummary';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -720,6 +721,7 @@ return sortedMatches
               isOnline={isOnline}
               activeTab={activeTab}
               handleTabToggle={handleTabToggle}
+              visits={visits} 
             />
           )}
           {activePage === 'visits' && <VisitsLog visits={visits} onViewDetails={handleViewDetails} onDelete={handleDeleteVisit} user={currentUser} handleSync={handleSync} queue={queue} isOnline={isOnline}/>}
