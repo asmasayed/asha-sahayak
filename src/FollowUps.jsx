@@ -4,34 +4,26 @@ import { db } from './firebase';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import LoadingSpinner from './LoadingSpinner';
 
-// This function now assumes a clean "YYYY-MM-DD" input format and has the typo fixed.
+// --- THIS IS THE UPDATED FUNCTION ---
+// It's now much simpler. It just reformats the date string for display.
 const formatFollowUpDate = (dateString) => {
-    if (!dateString || typeof dateString !== 'string') {
-        return 'Invalid Date';
+    // If the date string is missing or invalid, show a placeholder.
+    if (!dateString || typeof dateString !== 'string' || !dateString.includes('-')) {
+        // This will also safely display any non-date text like "अगले हफ्ते"
+        return dateString || 'No Date';
     }
 
-    // This works directly with the "YYYY-MM-DD" format from our database
-    const followUpDate = new Date(dateString);
-
-    // This is the line with the corrected typo.
-    if (isNaN(followUpDate.getTime())) {
-        return 'Invalid Date';
-    }
-
-    const today = new Date();
-    followUpDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    const diffTime = followUpDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Tomorrow';
-    if (diffDays > 1 && diffDays <= 7) return `In ${diffDays} days`;
-    
-    // Display in DD-MM-YYYY format as you requested
+    // Assuming the date from Firebase is "YYYY-MM-DD"
     const parts = dateString.split('-');
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+    // Check if it's in the expected format before trying to reformat
+    if (parts.length === 3 && parts[0].length === 4) {
+        // Return it in the more readable "DD-MM-YYYY" format
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+
+    // If it's not in the expected format, just show the original string
+    return dateString;
 };
 
 
@@ -49,7 +41,6 @@ const FollowUps = ({ userId }) => {
                 const today = new Date().toISOString().split('T')[0];
                 const visitsRef = collection(db, 'users', userId, 'visits');
 
-                // This query now works perfectly and sorts correctly because all dates are stored as YYYY-MM-DD
                 const q = query(
                     visitsRef,
                     where('treatment.nextFollowUp', '>=', today),
@@ -65,7 +56,6 @@ const FollowUps = ({ userId }) => {
                     followUpDate: doc.data().treatment.nextFollowUp
                 }));
                 
-                // Because the database now sorts for us reliably, the extra client-side sort is no longer needed!
                 setFollowUps(followUpsData);
 
             } catch (error) {
@@ -78,7 +68,7 @@ const FollowUps = ({ userId }) => {
     }, [userId]);
 
     if (loading) {
-        return  <LoadingSpinner />;;
+        return  <LoadingSpinner />;
     }
 
     return (
@@ -89,6 +79,7 @@ const FollowUps = ({ userId }) => {
                     {followUps.map(followUp => (
                         <li key={followUp.id} className="follow-up-item">
                             <span className="patient-name">{followUp.patientName}</span>
+                            {/* This now displays the clean, formatted date */}
                             <span className="follow-up-date">{formatFollowUpDate(followUp.followUpDate)}</span>
                         </li>
                     ))}
@@ -101,4 +92,3 @@ const FollowUps = ({ userId }) => {
 };
 
 export default FollowUps;
-

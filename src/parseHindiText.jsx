@@ -40,6 +40,7 @@ function normalizeText(text) {
   return normalized.toLowerCase();
 }
 
+
 // Helper function to extract number from text
 function extractNumber(text) {
   if (!text) return null;
@@ -53,6 +54,77 @@ function extractNumber(text) {
   if (wordNumber !== undefined) return wordNumber;
   
   return null;
+}
+
+// --- NEW HELPER FUNCTIONS FOR DATE PARSING ---
+
+// Maps month names (Hindi and English abbreviations) to month numbers (0-11)
+const monthMap = {
+    'जनवरी': 0, 'jan': 0, 'january': 0,
+    'फरवरी': 1, 'feb': 1, 'february': 1,
+    'मार्च': 2, 'mar': 2, 'march': 2,
+    'अप्रैल': 3, 'apr': 3, 'april': 3,
+    'मई': 4, 'may': 4,
+    'जून': 5, 'jun': 5, 'june': 5,
+    'जुलाई': 6, 'jul': 6, 'july': 6,
+    'अगस्त': 7, 'aug': 7, 'august': 7,
+    'सितंबर': 8, 'sep': 8, 'september': 8,
+    'अक्टूबर': 9, 'oct': 9, 'october': 9,
+    'नवंबर': 10, 'nov': 10, 'november': 10,
+    'दिसंबर': 11, 'dec': 11, 'december': 11
+};
+
+function parseDate(text) {
+    const today = new Date();
+    let date = null;
+
+    // --- Relative dates (e.g., "अगले हफ्ते", "in 2 days") ---
+    const relativeMatch = text.match(/(?:in|अगले|अगली)\s*(\d+|एक|दो|तीन|चार|पांच)\s*(दिन|हफ्ते|सप्ताह|महीने)/i);
+    if (relativeMatch) {
+        const value = parseInt(relativeMatch[1], 10) || wordNumberMap[relativeMatch[1].toLowerCase()] || 1;
+        const unit = relativeMatch[2];
+        const newDate = new Date();
+        if (unit.includes('दिन')) newDate.setDate(today.getDate() + value);
+        if (unit.includes('हफ्ते') || unit.includes('सप्ताह')) newDate.setDate(today.getDate() + value * 7);
+        if (unit.includes('महीने')) newDate.setMonth(today.getMonth() + value);
+        date = newDate;
+    }
+
+    // --- Specific dates (e.g., "24 Oct 2025", "25-10-2025") ---
+    // Pattern: (day) (month) (year - optional)
+    const specificDateMatch = text.match(/(\d{1,2})[\s\-/]([a-zA-Z\u0900-\u097F]+)[\s\-/]?(\d{4})?/);
+    if (specificDateMatch && !date) {
+        const day = parseInt(specificDateMatch[1], 10);
+        const monthName = specificDateMatch[2].toLowerCase();
+        const year = specificDateMatch[3] ? parseInt(specificDateMatch[3], 10) : today.getFullYear();
+        const month = monthMap[monthName];
+
+        if (day && month !== undefined) {
+            date = new Date(year, month, day);
+        }
+    }
+
+    // Pattern: (day)/(month)/(year - optional)
+    const numericDateMatch = text.match(/(\d{1,2})[\s\-/](\d{1,2})[\s\-/]?(\d{2,4})?/);
+     if (numericDateMatch && !date) {
+        const day = parseInt(numericDateMatch[1], 10);
+        const month = parseInt(numericDateMatch[2], 10) - 1; // JS months are 0-indexed
+        let year = numericDateMatch[3] ? parseInt(numericDateMatch[3], 10) : today.getFullYear();
+        if (year < 100) year += 2000; // Handle yy format e.g. 25 -> 2025
+
+        if (day && month >= 0 && month <= 11) {
+            date = new Date(year, month, day);
+        }
+    }
+
+    // If a valid date was found, format it to D/M/YYYY
+    if (date) {
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    }
+
+    // Fallback: If no date is found, return the original matched text
+    const fallbackMatch = text.match(/(?:अगली मुलाकात|फॉलोअप|अगली बार|फिर आना|दोबारा आना)\s+([^,]+?)(?=,|$)/i);
+    return fallbackMatch ? fallbackMatch[1].trim() : null;
 }
 
 // Main parsing function using targeted regex patterns
@@ -238,19 +310,31 @@ function parseHindiText(text, visitType = 'General') {
 
   // 9. FOLLOW-UP EXTRACTION
   // Pattern: अगली मुलाकात/फॉलोअप [date/time]
-  const followUpPatterns = [
-    /(?:अगली मुलाकात|फॉलोअप|अगली बार|फिर आना|दोबारा आना)\s+([^,]+?)(?=,|$)/i,
-    /(?:अगले सप्ताह|अगले महीने|अगली तारीख)/i
-  ];
-  
-  for (const pattern of followUpPatterns) {
-    const match = normalizedText.match(pattern);
-    if (match) {
-      data.treatment.nextFollowUp = match[1] || match[0];
-      console.log('Extracted follow-up:', match[1] || match[0]);
-      break;
+  const followUpKeywords = ['अगली मुलाकात', 'फॉलोअप', 'अगली बार', 'फिर आना', 'दोबारा आना'];
+    let followUpText = null;
+
+    for (const keyword of followUpKeywords) {
+        const regex = new RegExp(`${keyword}\\s+([^,]+?)(?=,|$)`, 'i');
+        const match = normalizedText.match(regex);
+        if (match && match[1]) {
+            followUpText = match[1].trim();
+            break;
+        }
     }
-  }
+    
+    // If we found text related to a follow-up, parse the date from it
+    if (followUpText) {
+        const parsedFollowUp = parseDate(followUpText);
+        if (parsedFollowUp) {
+            data.treatment.nextFollowUp = parsedFollowUp;
+            console.log('Extracted and formatted follow-up date:', parsedFollowUp);
+        } else {
+            // If parsing fails, store the raw text as a fallback
+            data.treatment.nextFollowUp = followUpText;
+            console.log('Extracted follow-up (raw text):', followUpText);
+        }
+    }
+  
 
   // 10. VISIT TYPE DETECTION
   // Check for maternal/child specific keywords
