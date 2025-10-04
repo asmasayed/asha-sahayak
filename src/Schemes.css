@@ -160,7 +160,7 @@
   margin-bottom: var(--space-6);
   text-align: center;
   padding: var(--space-4);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background:#748dff;
   color: white;
   border-radius: var(--radius-lg);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -359,7 +359,7 @@
 /* === MULTIPLE RESULT CARDS STYLING === */
 .results-container .result-card {
   margin-top: var(--space-6);
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #556fe5;
   transition: all var(--transition-normal);
 }
 

@@ -367,7 +367,7 @@ input::placeholder, textarea::placeholder {
 
 /* === CONFIRMATION & EDIT VIEW === */
 .confirmation-section {
-  background-color: var(--bg-tertiary);
+  background-color:  rgb(246, 246, 246);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--space-4);
@@ -463,22 +463,32 @@ input::placeholder, textarea::placeholder {
 
 
 /* === AUTHENTICATION === */
+/* === AUTHENTICATION PAGE STYLES === */
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: var(--space-5);
+  background-color: var(--bg-secondary);
 }
 
 .auth-form {
+  background-color: var(--bg-primary);
   padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
   max-width: 400px;
+  transition: all 0.3s ease-in-out;
 }
 
 .auth-form h2 {
+  margin-top: 0;
   margin-bottom: var(--space-6);
+  color: var(--text-dark);
   text-align: center;
+  font-size: var(--font-size-2xl);
 }
 
 .input-group {
@@ -489,8 +499,73 @@ input::placeholder, textarea::placeholder {
 .input-group label {
   display: block;
   margin-bottom: var(--space-2);
+  color: var(--text-dark);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
+}
+
+.input-group input {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-normal);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  padding: var(--space-3);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  /* This will apply the correct primary button style */
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  color: var(--text-dark);
+}
+
+.checkbox-group input {
+  margin-right: var(--space-2);
+}
+
+.toggle-form {
+  text-align: center;
+  margin-top: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--text-medium);
+}
+
+.toggle-form span {
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.toggle-form span:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: var(--danger-color);
+  text-align: center;
+  margin-bottom: var(--space-4);
+  font-weight: var(--font-weight-medium);
+  background-color: var(--danger-light);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
 }
 
 /* === TOASTS & NOTIFICATIONS === */
@@ -687,4 +762,64 @@ input::placeholder, textarea::placeholder {
 
 .toast-close-btn:hover {
   opacity: 1;
+}
+
+/* === IN-PLACE EDITING STYLES === */
+
+.edit-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3); /* Provides nice spacing between elements */
+}
+
+/* The text input field when editing */
+.edit-form input {
+  flex-grow: 1; /* This makes the input take up all available space */
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-normal);
+}
+
+.edit-form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Base styles for both the Save and Cancel buttons */
+.btn-save-edit,
+.btn-cancel-edit {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  line-height: 1;
+  font-size: var(--font-size-xl); /* Makes the icons larger and easier to click */
+  transition: all var(--transition-fast);
+}
+
+/* Specific color for the "Save" button */
+.btn-save-edit {
+  color: var(--success-color);
+  font-weight: var(--font-weight-semibold); /* Make the "Save" text bold */
+  font-size: var(--font-size-base); /* Use base size for text button */
+}
+
+/* Specific color for the "Cancel" (X) button */
+.btn-cancel-edit {
+  color: var(--text-medium);
+}
+
+/* Hover effects for visual feedback */
+.btn-save-edit:hover {
+  color: var(--success-hover);
+  transform: scale(1.1);
+}
+
+.btn-cancel-edit:hover {
+  color: var(--danger-color);
+  transform: scale(1.1);
 }

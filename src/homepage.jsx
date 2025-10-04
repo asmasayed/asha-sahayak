@@ -11,10 +11,10 @@ const DetailRow = ({ label, value, fieldPath, editingField, onEdit, onSave, onCa
     <div className="detail-item">
       {isEditing ? (
         <form onSubmit={onSave} className="edit-form">
-          <input type={inputType} name="editInput" defaultValue={value || ''} autoFocus />
-          <button type="submit" style={{padding:"5px 10px",fontSize:"15px"}} className="btn-save-edit">Save</button>
-          <button style={{padding:"5px",fontSize:"15px"}} onClick={onCancel} className="btn-cancel-edit">❌</button>
-        </form>
+  <input type={inputType} name="editInput" defaultValue={value || ''} autoFocus />
+  <button type="submit" className="btn-save-edit">Save</button>
+  <button type="button" onClick={onCancel} className="btn-cancel-edit">❌</button>
+</form>
       ) : (
         <>
           <p><strong>{label}:</strong> {value || <span className="not-found">Not found</span>}</p>
@@ -140,7 +140,7 @@ const HomePage = ({
       )}
       {parsedData ? (
         <div className="card confirmation-card">
-            <h2>Confirm Visit Details</h2>
+            <h2 style={{paddingBottom:"10px"}}>Confirm Visit Details</h2>
             
             {/* --- SECTION 1: BASIC INFO --- */}
             <div className="confirmation-section">
