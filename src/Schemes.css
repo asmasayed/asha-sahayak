@@ -177,8 +177,6 @@
 }
 
 .schemes-mic-controls .btn {
-  min-width: 200px;
-  padding: var(--space-4) var(--space-6);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   border-radius: var(--radius-lg);
@@ -223,7 +221,6 @@
 }
 
 .schemes-mic-controls .btn:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
@@ -708,4 +705,22 @@
     font-size: var(--font-size-sm);
     padding: var(--space-2);
   }
+}
+
+.schemes-mic-controls {
+  display: flex;          /* Use flexbox for layout */
+  flex-direction: row;    /* Align buttons horizontally */
+  align-items: stretch;   /* Make buttons the same height */
+  gap: 1rem;              /* Add space between the buttons */
+  width: 100%;            /* Make the container use the full width */
+}
+
+/* The 'Ask' button will be wider */
+.btn-ask-scheme {
+  flex-grow: 3; /* This makes the button take up more space */
+}
+
+/* The 'Stop' button will be narrower */
+.btn-stop-search {
+  flex-grow: 1;
 }
