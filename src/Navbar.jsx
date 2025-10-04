@@ -26,7 +26,7 @@ const Navbar = ({ activePage, onNavigate }) => {
 
   const activeButtonStyle = {
     // Styles ONLY for the active button
-    backgroundColor: '#4A90E2', // Corresponds to --primary-color
+    backgroundColor: '#007bff', // Corresponds to --primary-color
     color: '#FFFFFF', // Corresponds to --white
     fontWeight: 600, // Corresponds to --font-weight-semibold
   };
